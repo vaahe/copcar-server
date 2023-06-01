@@ -1,7 +1,8 @@
 const cors = require('cors');
 const express = require('express');
-const puppeteer = require('puppeteer');
 const bodyParser = require('body-parser');
+
+const lotRoutes = require('./routes/lotRoutes');
 
 const PORT = 8080;
 
@@ -19,40 +20,6 @@ app.use(
     })
 );
 
-
-const makeRequest = async (id) => {
-    const browser = await puppeteer.launch({
-        headless: "new",
-        args: [
-            "--disable-setuid-sandbox",
-            "--no-sandbox",
-            "--single-process",
-            "--no-zygote",
-        ]
-    });
-
-    try {
-        const page = await browser.newPage();
-        await page.goto(`https://www.copart.com/public/data/lotdetails/solr/lotImages/${id}`)
-
-        await page.waitForSelector('pre');
-        const innerHtmlJson = await page.$eval('pre', element => element.innerHTML);
-
-
-        return JSON.parse(innerHtmlJson).data.imagesList;
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await browser.close();
-    }
-}
-
-app.get('/:id', async (req, res) => {
-    const id = parseInt(req.params.id);
-    const data = await makeRequest(id);
-
-    res.json(data);
-})
-
+app.use('/lot', lotRoutes);
 
 app.listen(PORT, () => console.log(`App started on port ${PORT}`));
