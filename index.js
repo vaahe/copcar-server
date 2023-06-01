@@ -21,10 +21,7 @@ app.use(
 
 
 const makeRequest = async (id) => {
-    const browser = await puppeteer.launch({
-        headless: "new",
-        protocolTimeout: 20000
-    });
+    const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
     await page.goto(`https://www.copart.com/public/data/lotdetails/solr/lotImages/${id}`)
