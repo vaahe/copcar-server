@@ -22,16 +22,27 @@ app.use(
 
 const makeRequest = async (id) => {
     const browser = await puppeteer.launch({
-        headless: "new"
+        headless: "new",
+        args: [
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote",
+        ]
     });
 
-    const page = await browser.newPage();
-    await page.goto(`https://www.copart.com/public/data/lotdetails/solr/lotImages/${id}`)
-    const innerHtmlJson = await page.$eval('pre', element => element.innerHTML);
+    try {
+        const page = await browser.newPage();
+        await page.goto(`https://www.copart.com/public/data/lotdetails/solr/lotImages/${id}`)
+        const innerHtmlJson = await page.$eval('pre', element => element.innerHTML);
 
-    await browser.close();
 
-    return JSON.parse(innerHtmlJson).data.imagesList
+        return JSON.parse(innerHtmlJson).data.imagesList;
+    } catch (e) {
+        console.error(e);
+    } finally {
+        await browser.close();
+    }
 }
 
 app.get('/:id', async (req, res) => {
