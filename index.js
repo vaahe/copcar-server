@@ -21,11 +21,15 @@ app.use(
 
 
 const makeRequest = async (id) => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: "new"
+    });
 
     const page = await browser.newPage();
     await page.goto(`https://www.copart.com/public/data/lotdetails/solr/lotImages/${id}`)
     const innerHtmlJson = await page.$eval('pre', element => element.innerHTML);
+
+    await browser.close();
 
     return JSON.parse(innerHtmlJson).data.imagesList
 }
