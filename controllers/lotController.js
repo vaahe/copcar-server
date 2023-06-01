@@ -3,7 +3,11 @@ const puppeteer = require('puppeteer');
 const getLotImages = async (req, res) => {
     const id = parseInt(req.params.id);
 
+    const browserFetcher = puppeteer.createBrowserFetcher();
+    let revisionInfo = await browserFetcher.download('1095492');
+    
     const browser = await puppeteer.launch({
+        executablePath: revisionInfo.executablePath,
         headless: "new",
         args: [
             "--disable-setuid-sandbox",
