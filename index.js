@@ -34,6 +34,8 @@ const makeRequest = async (id) => {
     try {
         const page = await browser.newPage();
         await page.goto(`https://www.copart.com/public/data/lotdetails/solr/lotImages/${id}`)
+
+        await page.waitForSelector('pre');
         const innerHtmlJson = await page.$eval('pre', element => element.innerHTML);
 
 
