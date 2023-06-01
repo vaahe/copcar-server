@@ -21,7 +21,6 @@ app.use(
 
 
 const makeRequest = async (id) => {
-    console.log(id);
     const browser = await puppeteer.launch({
         headless: "new",
         protocolTimeout: 20000
@@ -38,7 +37,7 @@ app.get('/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     const data = await makeRequest(id);
 
-    res.json(data)
+    res.json(data);
 })
 
 
