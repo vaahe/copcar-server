@@ -8,7 +8,7 @@ const PORT = 8080;
 
 const app = express();
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "https://vaahe.github.io/copcar-client/",
     credentials: true
 }));
 
